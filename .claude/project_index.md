@@ -29,6 +29,9 @@
 │   ├── chromium.py          # 浏览器Cookie提取
 │   ├── print.py             # 控制台输出
 │   ├── prompt.py            # 用户交互
+│   ├── server.py            # Web服务器 (FastAPI)
+│   ├── web_ui/              # Web控制面板前端
+│   │   └── index.html       # Web界面
 │   ├── web/                 # 网络爬虫模块 (28个爬虫)
 │   │   ├── base.py          # HTTP请求基础层
 │   │   ├── exceptions.py    # 自定义异常
@@ -66,6 +69,7 @@
 | 文件 | 用途 | 行数 |
 |------|------|------|
 | `javsp/__main__.py` | 主程序入口点 | 625 |
+| `javsp/server.py` | Web服务器 (FastAPI) | 350+ |
 | `javsp/config.py` | 配置管理 | 238 |
 | `javsp/avid.py` | 视频ID提取 | 154 |
 | `javsp/datatype.py` | 数据结构定义 | 228 |
@@ -112,6 +116,9 @@ confz>=2.0.1              # 配置管理
 pendulum>=3.0.0           # 日期时间处理
 colorama==0.4.4           # 终端颜色
 tqdm==4.59.0              # 进度条
+fastapi>=0.109.0          # Web框架
+uvicorn>=0.27.0           # ASGI服务器
+pyyaml>=6.0.1             # YAML解析
 ```
 
 ### 开发工具
@@ -253,6 +260,50 @@ poetry run pytest unittest/test_crawlers.py  # 只运行爬虫测试
 
 ---
 
+## Web 控制面板
+
+JavSP 提供了一个基于 Web 的控制面板，可以通过浏览器启动/停止刮削任务和管理配置。
+
+### 启动 Web 服务器
+
+```bash
+# 使用 Poetry 运行
+poetry run server
+
+# 或者直接运行
+python -m javsp.server
+```
+
+默认访问地址: `http://localhost:8080`
+
+### 环境变量
+
+| 变量 | 默认值 | 说明 |
+|------|--------|------|
+| `JAVSP_HOST` | `0.0.0.0` | 监听地址 |
+| `JAVSP_PORT` | `8080` | 监听端口 |
+
+### API 接口
+
+| 端点 | 方法 | 说明 |
+|------|------|------|
+| `/api/status` | GET | 获取当前任务状态 |
+| `/api/config` | GET | 获取配置 |
+| `/api/config` | POST | 更新配置 |
+| `/api/task/start` | POST | 启动刮削任务 |
+| `/api/task/stop` | POST | 停止刮削任务 |
+| `/api/directories` | GET | 浏览目录 |
+
+### 功能特性
+
+- 实时任务状态监控
+- 目录浏览器选择扫描路径
+- 配置在线编辑和保存
+- 运行日志实时显示
+- 错误信息汇总
+
+---
+
 ## 快速开始
 
 ### 安装
@@ -261,8 +312,11 @@ poetry run pytest unittest/test_crawlers.py  # 只运行爬虫测试
 # 使用Poetry安装依赖
 poetry install
 
-# 运行程序
+# 运行命令行程序
 poetry run javsp
+
+# 运行Web控制面板
+poetry run server
 ```
 
 ### Docker

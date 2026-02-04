@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavSP - 刮削控制面板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card h2 {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            color: #3a7bd5;
+        }
+
+        .status-panel {
+            grid-column: 1 / -1;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .status-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .status-item .label {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .status-item .value {
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .status-idle { color: #888; }
+        .status-running { color: #4caf50; }
+        .status-stopping { color: #ff9800; }
+        .status-completed { color: #2196f3; }
+        .status-error { color: #f44336; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            transition: width 0.3s ease;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(58, 123, 213, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(90deg, #f44336, #e91e63);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #aaa;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #e0e0e0;
+            font-size: 1em;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3a7bd5;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-row .btn {
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            cursor: pointer;
+            color: #ccc;
+        }
+
+        .log-container {
+            grid-column: 1 / -1;
+        }
+
+        .log-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+        }
+
+        .log-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .log-box::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .log-box::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        .log-entry {
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .log-entry.error {
+            color: #f44336;
+        }
+
+        .error-list {
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .error-item {
+            background: rgba(244, 67, 54, 0.1);
+            border-left: 3px solid #f44336;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 0 4px 4px 0;
+            font-size: 0.9em;
+        }
+
+        .directory-browser {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .directory-browser.active {
+            display: block;
+        }
+
+        .dir-path {
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-family: monospace;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dir-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .dir-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .dir-item.parent {
+            color: #3a7bd5;
+            font-weight: 500;
+        }
+
+        .dir-icon {
+            font-size: 1.2em;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+        }
+
+        .toast.error {
+            background: linear-gradient(90deg, #f44336, #e91e63);
+        }
+
+        .section-title {
+            font-size: 1em;
+            color: #888;
+            margin: 20px 0 10px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavSP</h1>
+            <p>影片元数据刮削控制面板</p>
+        </header>
+
+        <div class="grid">
+            <!-- 任务状态面板 -->
+            <div class="card status-panel">
+                <h2>任务状态</h2>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="label">状态</div>
+                        <div class="value" id="status-text">空闲</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="label">总影片数</div>
+                        <div class="value" id="total-movies">0</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="label">已处理</div>
+                        <div class="value" id="processed-movies">0</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="label">当前处理</div>
+                        <div class="value" id="current-movie" style="font-size: 1em;">-</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="btn-start" onclick="startTask()">开始刮削</button>
+                    <button class="btn btn-danger" id="btn-stop" onclick="stopTask()" disabled>停止任务</button>
+                </div>
+            </div>
+
+            <!-- 扫描配置 -->
+            <div class="card">
+                <h2>扫描配置</h2>
+                <div class="form-group">
+                    <label>扫描目录</label>
+                    <div class="form-row">
+                        <input type="text" id="input-directory" placeholder="选择或输入目录路径">
+                        <button class="btn btn-primary btn-sm" onclick="toggleBrowser()">浏览</button>
+                    </div>
+                    <div class="directory-browser" id="dir-browser">
+                        <div class="dir-path">
+                            <span id="current-path">/</span>
+                            <button class="btn btn-sm" onclick="selectCurrentDir()">选择此目录</button>
+                        </div>
+                        <div id="dir-list"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>最小文件大小</label>
+                    <input type="text" id="minimum-size" placeholder="例如: 232MiB">
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="skip-nfo-dir">
+                    <label for="skip-nfo-dir">跳过已有 NFO 的目录</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="manual-mode">
+                    <label for="manual-mode">手动确认番号模式</label>
+                </div>
+            </div>
+
+            <!-- 网络配置 -->
+            <div class="card">
+                <h2>网络配置</h2>
+                <div class="form-group">
+                    <label>代理服务器</label>
+                    <input type="text" id="proxy-server" placeholder="例如: http://127.0.0.1:7890">
+                </div>
+                <div class="form-group">
+                    <label>重试次数</label>
+                    <input type="number" id="retry-count" min="0" max="10" value="3">
+                </div>
+
+                <div class="section-title">爬虫设置</div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="hardworking">
+                    <label for="hardworking">努力模式（获取更多信息）</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="normalize-actress">
+                    <label for="normalize-actress">统一女优艺名</label>
+                </div>
+            </div>
+
+            <!-- 输出配置 -->
+            <div class="card">
+                <h2>输出配置</h2>
+                <div class="form-group">
+                    <label>输出目录模式</label>
+                    <input type="text" id="output-pattern" placeholder="例如: #整理完成/{actress}/[{num}] {title}">
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="move-files">
+                    <label for="move-files">整理时移动文件</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="hard-link">
+                    <label for="hard-link">使用硬链接（节省空间）</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="highres-cover">
+                    <label for="highres-cover">下载高清封面</label>
+                </div>
+
+                <div class="section-title">翻译设置</div>
+                <div class="form-group">
+                    <label>翻译引擎</label>
+                    <select id="translator-engine">
+                        <option value="">不翻译</option>
+                        <option value="google">Google 翻译</option>
+                        <option value="bing">Bing 翻译</option>
+                        <option value="baidu">百度翻译</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 保存配置 -->
+            <div class="card">
+                <h2>配置操作</h2>
+                <p style="color: #888; margin-bottom: 15px;">修改配置后点击保存，配置将在下次任务启动时生效。</p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="saveConfig()">保存配置</button>
+                    <button class="btn" style="background: #444;" onclick="loadConfig()">重新加载</button>
+                </div>
+            </div>
+
+            <!-- 错误列表 -->
+            <div class="card" id="error-panel" style="display: none;">
+                <h2>错误信息</h2>
+                <div class="error-list" id="error-list"></div>
+            </div>
+
+            <!-- 日志面板 -->
+            <div class="card log-container">
+                <h2>运行日志</h2>
+                <div class="log-box" id="log-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 通知 -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // 状态轮询间隔
+        let pollInterval = null;
+        let currentBrowsePath = '/';
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConfig();
+            startPolling();
+        });
+
+        // 开始状态轮询
+        function startPolling() {
+            pollInterval = setInterval(updateStatus, 1000);
+            updateStatus();
+        }
+
+        // 更新状态
+        async function updateStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+
+                // 更新状态显示
+                const statusText = document.getElementById('status-text');
+                const statusMap = {
+                    'idle': '空闲',
+                    'running': '运行中',
+                    'stopping': '正在停止',
+                    'completed': '已完成',
+                    'error': '出错'
+                };
+                statusText.textContent = statusMap[data.status] || data.status;
+                statusText.className = 'value status-' + data.status;
+
+                // 更新数字
+                document.getElementById('total-movies').textContent = data.total_movies;
+                document.getElementById('processed-movies').textContent = data.processed_movies;
+                document.getElementById('current-movie').textContent = data.current_movie || '-';
+
+                // 更新进度条
+                const progress = data.total_movies > 0
+                    ? (data.processed_movies / data.total_movies * 100)
+                    : 0;
+                document.getElementById('progress-fill').style.width = progress + '%';
+
+                // 更新按钮状态
+                const isRunning = data.status === 'running' || data.status === 'stopping';
+                document.getElementById('btn-start').disabled = isRunning;
+                document.getElementById('btn-stop').disabled = !isRunning || data.status === 'stopping';
+
+                // 更新日志
+                const logBox = document.getElementById('log-box');
+                if (data.logs && data.logs.length > 0) {
+                    logBox.innerHTML = data.logs.map(log =>
+                        `<div class="log-entry">${escapeHtml(log)}</div>`
+                    ).join('');
+                    logBox.scrollTop = logBox.scrollHeight;
+                }
+
+                // 更新错误列表
+                const errorPanel = document.getElementById('error-panel');
+                const errorList = document.getElementById('error-list');
+                if (data.errors && data.errors.length > 0) {
+                    errorPanel.style.display = 'block';
+                    errorList.innerHTML = data.errors.map(err =>
+                        `<div class="error-item">${escapeHtml(err)}</div>`
+                    ).join('');
+                } else {
+                    errorPanel.style.display = 'none';
+                }
+
+            } catch (error) {
+                console.error('获取状态失败:', error);
+            }
+        }
+
+        // 加载配置
+        async function loadConfig() {
+            try {
+                const response = await fetch('/api/config');
+                const data = await response.json();
+
+                if (data.success && data.config) {
+                    const config = data.config;
+
+                    // Scanner
+                    document.getElementById('input-directory').value = config.scanner?.input_directory || '';
+                    document.getElementById('minimum-size').value = config.scanner?.minimum_size || '232MiB';
+                    document.getElementById('skip-nfo-dir').checked = config.scanner?.skip_nfo_dir ?? true;
+                    document.getElementById('manual-mode').checked = config.scanner?.manual ?? false;
+
+                    // Network
+                    document.getElementById('proxy-server').value = config.network?.proxy_server || '';
+                    document.getElementById('retry-count').value = config.network?.retry ?? 3;
+
+                    // Crawler
+                    document.getElementById('hardworking').checked = config.crawler?.hardworking ?? true;
+                    document.getElementById('normalize-actress').checked = config.crawler?.normalize_actress_name ?? true;
+
+                    // Summarizer
+                    document.getElementById('output-pattern').value = config.summarizer?.path?.output_folder_pattern || '';
+                    document.getElementById('move-files').checked = config.summarizer?.move_files ?? true;
+                    document.getElementById('hard-link').checked = config.summarizer?.path?.hard_link ?? false;
+                    document.getElementById('highres-cover').checked = config.summarizer?.cover?.highres ?? true;
+
+                    // Translator
+                    const engine = config.translator?.engine;
+                    document.getElementById('translator-engine').value = engine?.name || '';
+                }
+            } catch (error) {
+                console.error('加载配置失败:', error);
+                showToast('加载配置失败', 'error');
+            }
+        }
+
+        // 保存配置
+        async function saveConfig() {
+            try {
+                const config = {
+                    scanner_input_directory: document.getElementById('input-directory').value || null,
+                    scanner_minimum_size: document.getElementById('minimum-size').value,
+                    scanner_skip_nfo_dir: document.getElementById('skip-nfo-dir').checked,
+                    scanner_manual: document.getElementById('manual-mode').checked,
+                    network_proxy_server: document.getElementById('proxy-server').value || null,
+                    network_retry: parseInt(document.getElementById('retry-count').value) || 3,
+                    crawler_hardworking: document.getElementById('hardworking').checked,
+                    crawler_normalize_actress_name: document.getElementById('normalize-actress').checked,
+                    summarizer_move_files: document.getElementById('move-files').checked,
+                    summarizer_path_output_folder_pattern: document.getElementById('output-pattern').value,
+                    summarizer_path_hard_link: document.getElementById('hard-link').checked,
+                    summarizer_cover_highres: document.getElementById('highres-cover').checked,
+                    translator_engine: document.getElementById('translator-engine').value || null
+                };
+
+                const response = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('配置已保存', 'success');
+                } else {
+                    showToast('保存失败: ' + data.detail, 'error');
+                }
+            } catch (error) {
+                console.error('保存配置失败:', error);
+                showToast('保存配置失败', 'error');
+            }
+        }
+
+        // 启动任务
+        async function startTask() {
+            try {
+                const inputDir = document.getElementById('input-directory').value;
+
+                const response = await fetch('/api/task/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input_directory: inputDir || null })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('任务已启动', 'success');
+                } else {
+                    showToast('启动失败: ' + data.detail, 'error');
+                }
+            } catch (error) {
+                console.error('启动任务失败:', error);
+                showToast('启动任务失败', 'error');
+            }
+        }
+
+        // 停止任务
+        async function stopTask() {
+            try {
+                const response = await fetch('/api/task/stop', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showToast('正在停止任务', 'success');
+                } else {
+                    showToast('停止失败: ' + data.detail, 'error');
+                }
+            } catch (error) {
+                console.error('停止任务失败:', error);
+                showToast('停止任务失败', 'error');
+            }
+        }
+
+        // 切换目录浏览器
+        function toggleBrowser() {
+            const browser = document.getElementById('dir-browser');
+            browser.classList.toggle('active');
+            if (browser.classList.contains('active')) {
+                browseDirectory(currentBrowsePath);
+            }
+        }
+
+        // 浏览目录
+        async function browseDirectory(path) {
+            try {
+                const response = await fetch(`/api/directories?path=${encodeURIComponent(path)}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    currentBrowsePath = data.path;
+                    document.getElementById('current-path').textContent = data.path;
+
+                    const dirList = document.getElementById('dir-list');
+                    let html = '';
+
+                    // 添加返回上级目录
+                    if (data.parent) {
+                        html += `<div class="dir-item parent" onclick="browseDirectory('${escapeAttr(data.parent)}')">
+                            <span class="dir-icon">📁</span>
+                            <span>..</span>
+                        </div>`;
+                    }
+
+                    // 添加子目录
+                    for (const dir of data.directories) {
+                        html += `<div class="dir-item" onclick="browseDirectory('${escapeAttr(dir.path)}')">
+                            <span class="dir-icon">📁</span>
+                            <span>${escapeHtml(dir.name)}</span>
+                        </div>`;
+                    }
+
+                    dirList.innerHTML = html || '<div style="color: #888; padding: 10px;">没有子目录</div>';
+                }
+            } catch (error) {
+                console.error('浏览目录失败:', error);
+            }
+        }
+
+        // 选择当前目录
+        function selectCurrentDir() {
+            document.getElementById('input-directory').value = currentBrowsePath;
+            document.getElementById('dir-browser').classList.remove('active');
+            showToast('已选择目录', 'success');
+        }
+
+        // 显示 Toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // HTML 转义
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 属性转义
+        function escapeAttr(text) {
+            return text.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+    </script>
+</body>
+</html>
