@@ -156,8 +156,7 @@ def run_scrape_task(input_directory: Optional[str] = None):
 
         # 导入核心模块
         from javsp.config import Cfg
-        from javsp.file import scan_movies, get_scan_dir
-        from javsp.func import check_update
+        from javsp.file import scan_movies
 
         # 重新加载配置
         # 注意：这里需要重置配置单例

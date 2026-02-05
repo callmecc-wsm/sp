@@ -37,12 +37,6 @@ pyyaml = "^6.0.1"
 javsp = "javsp.__main__:entry"
 server = "javsp.server:entry"
 
-[[tool.poetry.source]]
-name = "mirrors"
-url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-priority = "primary"
-
-
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
 flake8 = "^7.0.0"
