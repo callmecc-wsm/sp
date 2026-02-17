@@ -1,0 +1,42 @@
+# ============================================================
+# JAVDB 磁力链接监控 - 配置文件
+# ============================================================
+
+# 标签筛选 URL
+# 获取方式:
+#   1. 先运行: python main.py --login   (打开浏览器登录 JAVDB)
+#   2. 登录后，在浏览器中手动导航到标签筛选页
+#   3. 选择你要的标签（如 足交），再勾选「含磁鏈」
+#   4. 复制地址栏的完整 URL
+#   5. 粘贴到下面对应的 url 字段
+tags:
+  - name: "足交"
+    url: ""   # 粘贴筛选后的 URL
+  - name: "戀腿癖"
+    url: ""   # 粘贴筛选后的 URL
+
+# 每个标签检查几页（从第1页开始）
+max_pages: 3
+
+# 浏览器配置
+browser:
+  # 浏览器数据目录（保存登录状态，不要删除）
+  profile_dir: "./browser_data"
+  # 是否无头模式（建议 false，有头模式更不容易被检测）
+  headless: false
+
+# 输出设置
+output_file: "./output/magnets.txt"
+
+# 历史记录数据库（用于去重）
+db_file: "./data/history.db"
+
+# 人类行为模拟延迟（秒）
+# 格式: [最小值, 最大值]，实际延迟在区间内随机
+delays:
+  after_page_load: [3, 6]
+  between_scrolls: [0.3, 1.2]
+  before_click: [0.5, 1.5]
+  between_videos: [4, 10]
+  between_pages: [5, 12]
+  reading_detail: [2, 5]
