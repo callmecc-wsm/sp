@@ -11,9 +11,9 @@
 #   5. 粘贴到下面对应的 url 字段
 tags:
   - name: "足交"
-    url: ""   # 粘贴筛选后的 URL
+    url: "https://javdb.com/tags?c5=61&c10=1"
   - name: "戀腿癖"
-    url: ""   # 粘贴筛选后的 URL
+    url: "https://javdb.com/tags?c1=107&c10=1"
 
 # 每个标签检查几页（从第1页开始）
 max_pages: 3

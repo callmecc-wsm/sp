@@ -157,7 +157,6 @@ def cmd_run(config):
             logger.info(f'URL: {tag_url}')
 
             current_url = tag_url
-            all_new_on_page = True  # 用于提前终止
 
             for page_num in range(1, max_pages + 1):
                 logger.info(f'--- 第 {page_num}/{max_pages} 页 ---')
