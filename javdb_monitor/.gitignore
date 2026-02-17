@@ -1,0 +1,12 @@
+# Browser profile data (contains login sessions, cache, etc.)
+browser_data/
+browser_data_test*/
+
+# Runtime data
+data/
+output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
