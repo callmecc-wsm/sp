@@ -24,6 +24,8 @@ browser:
   profile_dir: "./browser_data"
   # 是否无头模式（建议 false，有头模式更不容易被检测）
   headless: false
+  # 浏览器可执行文件路径（留空则自动查找）
+  browser_path: ""
 
 # 输出设置
 output_file: "./output/magnets.txt"

@@ -17,12 +17,17 @@ JAVDB_BASE = 'https://javdb.com'
 class HumanBrowser:
     """封装 DrissionPage，提供人类行为模拟能力"""
 
-    def __init__(self, profile_dir='./browser_data', headless=False):
+    def __init__(self, profile_dir='./browser_data', headless=False, browser_path=None):
         co = ChromiumOptions()
+        if browser_path:
+            co.set_browser_path(browser_path)
         co.set_user_data_path(str(Path(profile_dir).resolve()))
         co.set_argument('--disable-blink-features=AutomationControlled')
         co.set_argument('--window-size=1920,1080')
         co.set_argument('--lang=zh-TW')
+        co.set_argument('--no-sandbox')
+        co.set_argument('--disable-gpu')
+        co.set_argument('--disable-dev-shm-usage')
         if headless:
             co.headless()
 

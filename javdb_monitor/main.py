@@ -83,6 +83,7 @@ def cmd_login(config):
     browser = HumanBrowser(
         profile_dir=browser_cfg.get('profile_dir', './browser_data'),
         headless=False,  # 登录必须有头模式
+        browser_path=browser_cfg.get('browser_path') or None,
     )
 
     try:
@@ -141,6 +142,7 @@ def cmd_run(config):
     browser = HumanBrowser(
         profile_dir=browser_cfg.get('profile_dir', './browser_data'),
         headless=browser_cfg.get('headless', False),
+        browser_path=browser_cfg.get('browser_path') or None,
     )
 
     all_new_results = []
