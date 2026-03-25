@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2025 夏日团建 · 报名</title>
+  <style>
+    /* ===== 基础 & 变量 ===== */
+    :root {
+      --blue-dark:   #1a5fb4;
+      --blue:        #3584e4;
+      --blue-light:  #62a0ea;
+      --blue-pale:   #ddeeff;
+      --orange:      #ff7800;
+      --orange-light:#ffaa44;
+      --orange-pale: #fff3e0;
+      --white:       #ffffff;
+      --gray-light:  #f4f6f8;
+      --gray:        #8a9bb0;
+      --text:        #1c2c3e;
+      --shadow:      0 4px 24px rgba(26,95,180,.12);
+      --radius:      16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+      background: var(--gray-light);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ===== 顶部波浪 Hero ===== */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 55%, var(--blue-light) 100%);
+      padding: 60px 24px 120px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* 装饰太阳 */
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(255,170,68,.55) 0%, rgba(255,120,0,.18) 55%, transparent 70%);
+      border-radius: 50%;
+      animation: sunPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes sunPulse {
+      0%, 100% { transform: scale(1); opacity: .8; }
+      50%       { transform: scale(1.08); opacity: 1; }
+    }
+
+    /* 小气泡 */
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(0) rotate(0); opacity: .6; }
+      100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.4);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      padding: 5px 16px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(6px);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.6rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 12px rgba(0,0,0,.2);
+      position: relative;
+    }
+
+    .hero h1 span {
+      color: var(--orange-light);
+    }
+
+    .hero-sub {
+      margin-top: 14px;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,.85);
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.18);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      font-size: .95rem;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 999px;
+    }
+
+    .hero-meta-item .icon { font-size: 1.1rem; }
+
+    /* 波浪底部 */
+    .wave-wrap {
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      line-height: 0;
+    }
+
+    /* ===== 报名人数横幅 ===== */
+    .count-bar {
+      background: var(--orange);
+      color: #fff;
+      text-align: center;
+      padding: 14px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+
+    .count-bar .count-num {
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .count-progress-wrap {
+      max-width: 360px;
+      margin: 8px auto 0;
+      background: rgba(255,255,255,.3);
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .count-progress-bar {
+      height: 100%;
+      background: #fff;
+      border-radius: 999px;
+      transition: width .6s ease;
+    }
+
+    /* ===== 主内容 ===== */
+    .main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+
+    /* ===== 卡片 ===== */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 36px 40px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 560px) {
+      .card { padding: 24px 18px; }
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 5px;
+      height: 22px;
+      background: linear-gradient(to bottom, var(--orange), var(--blue));
+      border-radius: 3px;
+    }
+
+    /* ===== 日程时间线 ===== */
+    .timeline {
+      list-style: none;
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--blue-light), var(--orange-light));
+      border-radius: 2px;
+    }
+
+    .timeline li {
+      position: relative;
+      margin-bottom: 20px;
+      padding-left: 20px;
+    }
+
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: -18px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blue);
+      border: 2px solid var(--white);
+      box-shadow: 0 0 0 2px var(--blue-light);
+    }
+
+    .timeline li:nth-child(even)::before { background: var(--orange); box-shadow: 0 0 0 2px var(--orange-light); }
+
+    .tl-time {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: .5px;
+    }
+
+    .tl-desc {
+      font-size: .97rem;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    /* ===== 信息格子 ===== */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .info-item {
+      background: var(--blue-pale);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .info-item .ii-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .info-item .ii-label {
+      font-size: .8rem;
+      color: var(--gray);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .info-item .ii-value {
+      font-size: .97rem;
+      font-weight: 600;
+      color: var(--blue-dark);
+      margin-top: 2px;
+    }
+
+    /* ===== 表单 ===== */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 560px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-group label {
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--blue-dark);
+    }
+
+    .form-group label .req {
+      color: var(--orange);
+      margin-left: 2px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      border: 1.5px solid #d0dde8;
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: .97rem;
+      color: var(--text);
+      background: var(--gray-light);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(53,132,228,.15);
+      background: #fff;
+    }
+
+    .form-group input.error,
+    .form-group select.error {
+      border-color: #e05050;
+      box-shadow: 0 0 0 3px rgba(224,80,80,.12);
+    }
+
+    .form-group .field-err {
+      font-size: .8rem;
+      color: #e05050;
+      display: none;
+    }
+
+    .form-group .field-err.show { display: block; }
+
+    /* 单选组 */
+    .radio-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: .95rem;
+      font-weight: 400;
+      color: var(--text);
+      cursor: pointer;
+      background: var(--gray-light);
+      border: 1.5px solid #d0dde8;
+      border-radius: 8px;
+      padding: 9px 16px;
+      transition: border-color .2s, background .2s;
+    }
+
+    .radio-group input[type="radio"] { accent-color: var(--blue); }
+
+    .radio-group label:has(input:checked) {
+      border-color: var(--blue);
+      background: var(--blue-pale);
+      color: var(--blue-dark);
+      font-weight: 600;
+    }
+
+    /* 提交按钮 */
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.08rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 18px rgba(255,120,0,.35);
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,120,0,.45); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    /* ===== 成功提示 ===== */
+    .success-box {
+      display: none;
+      text-align: center;
+      padding: 32px 20px;
+    }
+
+    .success-box .s-icon { font-size: 3.5rem; }
+    .success-box h3 { font-size: 1.4rem; font-weight: 700; color: var(--blue-dark); margin-top: 12px; }
+    .success-box p  { color: var(--gray); margin-top: 8px; }
+
+    .btn-reset {
+      margin-top: 20px;
+      display: inline-block;
+      padding: 10px 28px;
+      background: var(--blue-pale);
+      color: var(--blue-dark);
+      border: none;
+      border-radius: 999px;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .btn-reset:hover { background: var(--blue-light); color: #fff; }
+
+    /* ===== 页脚 ===== */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: .85rem;
+      color: var(--gray);
+    }
+
+    /* ===== Toast ===== */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1c2c3e;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: .92rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s, transform .3s;
+      z-index: 999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero" id="top">
+  <!-- 气泡装饰 -->
+  <div class="bubble" style="width:40px;height:40px;left:8%;bottom:30%;animation-duration:7s;animation-delay:0s"></div>
+  <div class="bubble" style="width:22px;height:22px;left:20%;bottom:10%;animation-duration:5s;animation-delay:1s"></div>
+  <div class="bubble" style="width:16px;height:16px;left:75%;bottom:20%;animation-duration:6s;animation-delay:2s"></div>
+  <div class="bubble" style="width:30px;height:30px;left:60%;bottom:40%;animation-duration:8s;animation-delay:.5s"></div>
+
+  <div class="hero-badge">☀ SUMMER 2025</div>
+  <h1>2025 <span>夏日</span>团建</h1>
+  <p class="hero-sub">与伙伴们一起，度过一个难忘的夏日时光</p>
+
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="icon">📅</span> 7月19日 周六</div>
+    <div class="hero-meta-item"><span class="icon">🕘</span> 09:00 – 18:00</div>
+    <div class="hero-meta-item"><span class="icon">📍</span> 朝阳区某某度假村</div>
+  </div>
+
+  <!-- 波浪 SVG -->
+  <div class="wave-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none" style="display:block;width:100%;height:80px">
+      <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z" fill="#f4f6f8"/>
+    </svg>
+  </div>
+</header>
+
+<!-- ===== 报名人数横幅 ===== -->
+<div class="count-bar">
+  🔥 活动火热报名中 &nbsp;·&nbsp; 已报名
+  <span class="count-num" id="countDisplay">23</span>
+  / <span id="totalDisplay">50</span> 人
+  &nbsp;<span id="spotsLeft" style="font-size:.88rem;opacity:.85">（剩余 27 个名额）</span>
+  <div class="count-progress-wrap">
+    <div class="count-progress-bar" id="progressBar" style="width:46%"></div>
+  </div>
+</div>
+
+<!-- ===== 主内容 ===== -->
+<main class="main">
+
+  <!-- 活动介绍 -->
+  <div class="card">
+    <h2 class="section-title">活动介绍</h2>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="ii-icon">📅</span>
+        <div>
+          <div class="ii-label">日期</div>
+          <div class="ii-value">2025年7月19日（周六）</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="ii-icon">⏰</span>
+        <div>
+          <div class="ii-label">时间</div>
+          <div class="ii-value">09:00 — 18:00</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="ii-icon">📍</span>
+        <div>
+          <div class="ii-label">地点</div>
+          <div class="ii-value">朝阳区某某度假村</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="ii-icon">👥</span>
+        <div>
+          <div class="ii-label">人数上限</div>
+          <div class="ii-value">50 人（先报先得）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 日程安排 -->
+  <div class="card">
+    <h2 class="section-title">日程安排</h2>
+    <ul class="timeline">
+      <li>
+        <div class="tl-time">09:00 — 09:30</div>
+        <div class="tl-desc">集合 · 班车出发</div>
+      </li>
+      <li>
+        <div class="tl-time">10:00 — 11:30</div>
+        <div class="tl-desc">团队破冰游戏 · 热身活动</div>
+      </li>
+      <li>
+        <div class="tl-time">11:30 — 13:00</div>
+        <div class="tl-desc">午餐 · 自由交流</div>
+      </li>
+      <li>
+        <div class="tl-time">13:30 — 16:00</div>
+        <div class="tl-desc">户外团队挑战赛</div>
+      </li>
+      <li>
+        <div class="tl-time">16:00 — 17:30</div>
+        <div class="tl-desc">颁奖典礼 · 合影留念</div>
+      </li>
+      <li>
+        <div class="tl-time">17:30 — 18:00</div>
+        <div class="tl-desc">班车返程</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 报名表单 -->
+  <div class="card" id="formCard">
+    <h2 class="section-title">立即报名</h2>
+
+    <form id="signupForm" novalidate>
+      <div class="form-grid">
+
+        <!-- 姓名 -->
+        <div class="form-group">
+          <label for="name">姓名 <span class="req">*</span></label>
+          <input type="text" id="name" name="name" placeholder="请输入您的姓名" autocomplete="name" />
+          <span class="field-err" id="nameErr">请填写姓名</span>
+        </div>
+
+        <!-- 部门 -->
+        <div class="form-group">
+          <label for="dept">部门 <span class="req">*</span></label>
+          <select id="dept" name="dept">
+            <option value="">请选择部门</option>
+            <option>产品部</option>
+            <option>技术部</option>
+            <option>设计部</option>
+            <option>市场部</option>
+            <option>运营部</option>
+            <option>销售部</option>
+            <option>人事行政</option>
+            <option>财务部</option>
+            <option>其他</option>
+          </select>
+          <span class="field-err" id="deptErr">请选择所在部门</span>
+        </div>
+
+        <!-- 手机号 -->
+        <div class="form-group full">
+          <label for="phone">手机号 <span class="req">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="请输入您的手机号" autocomplete="tel" maxlength="11" />
+          <span class="field-err" id="phoneErr">请填写正确的11位手机号</span>
+        </div>
+
+        <!-- 班车 -->
+        <div class="form-group full">
+          <label>是否需要班车接送 <span class="req">*</span></label>
+          <div class="radio-group" id="shuttleGroup">
+            <label>
+              <input type="radio" name="shuttle" value="是，需要班车" />
+              🚌 需要班车
+            </label>
+            <label>
+              <input type="radio" name="shuttle" value="否，自行前往" />
+              🚗 自行前往
+            </label>
+          </div>
+          <span class="field-err" id="shuttleErr">请选择是否需要班车</span>
+        </div>
+
+        <!-- 饮食偏好 -->
+        <div class="form-group full">
+          <label for="diet">饮食偏好</label>
+          <select id="diet" name="diet">
+            <option value="无特殊要求">无特殊要求</option>
+            <option value="素食">素食</option>
+            <option value="清真">清真</option>
+            <option value="不吃猪肉">不吃猪肉</option>
+            <option value="过敏：坚果">过敏：坚果</option>
+            <option value="过敏：海鲜">过敏：海鲜</option>
+            <option value="其他">其他（备注说明）</option>
+          </select>
+        </div>
+
+        <!-- 备注 -->
+        <div class="form-group full">
+          <label for="note">备注（选填）</label>
+          <textarea id="note" name="note" rows="3" placeholder="如有特殊需求或其他说明，请在此填写"></textarea>
+        </div>
+
+      </div><!-- /form-grid -->
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        ✅ 提交报名
+      </button>
+    </form>
+
+    <!-- 成功提示 -->
+    <div class="success-box" id="successBox">
+      <div class="s-icon">🎉</div>
+      <h3>报名成功！</h3>
+      <p>我们已收到您的报名，期待与您相聚！<br/>活动相关通知将通过公司群发送，请留意。</p>
+      <button class="btn-reset" onclick="resetForm()">再帮同事报一个</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2025 公司团建活动组委会 &nbsp;·&nbsp; 如有疑问请联系 HR
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ===== 报名人数状态 =====
+  let currentCount = 23;
+  const totalCount = 50;
+
+  function updateCount(n) {
+    currentCount = n;
+    document.getElementById('countDisplay').textContent = n;
+    document.getElementById('totalDisplay').textContent = totalCount;
+    const left = totalCount - n;
+    document.getElementById('spotsLeft').textContent = left > 0
+      ? `（剩余 ${left} 个名额）`
+      : '（名额已满）';
+    document.getElementById('progressBar').style.width = Math.min(n / totalCount * 100, 100) + '%';
+  }
+
+  // 页面加载时拉取最新人数
+  async function fetchCount() {
+    try {
+      const res = await fetch('/api/count');
+      if (res.ok) {
+        const data = await res.json();
+        updateCount(data.count);
+      }
+    } catch(e) {
+      // 离线时保持假数据
+    }
+  }
+
+  fetchCount();
+
+  // ===== 表单验证 =====
+  function showErr(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function clearErr(id) {
+    document.getElementById(id).classList.remove('show');
+  }
+
+  function markField(id, ok) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (ok) el.classList.remove('error');
+    else el.classList.add('error');
+  }
+
+  function validate() {
+    let ok = true;
+
+    // 姓名
+    const name = document.getElementById('name').value.trim();
+    if (!name) { showErr('nameErr', '请填写姓名'); markField('name', false); ok = false; }
+    else { clearErr('nameErr'); markField('name', true); }
+
+    // 部门
+    const dept = document.getElementById('dept').value;
+    if (!dept) { showErr('deptErr', '请选择所在部门'); markField('dept', false); ok = false; }
+    else { clearErr('deptErr'); markField('dept', true); }
+
+    // 手机号
+    const phone = document.getElementById('phone').value.trim();
+    if (!/^1[3-9]\d{9}$/.test(phone)) { showErr('phoneErr', '请填写正确的11位手机号'); markField('phone', false); ok = false; }
+    else { clearErr('phoneErr'); markField('phone', true); }
+
+    // 班车
+    const shuttle = document.querySelector('input[name="shuttle"]:checked');
+    if (!shuttle) { showErr('shuttleErr', '请选择是否需要班车'); ok = false; }
+    else { clearErr('shuttleErr'); }
+
+    return ok;
+  }
+
+  // ===== 提交 =====
+  document.getElementById('signupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!validate()) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '提交中…';
+
+    const payload = {
+      name:    document.getElementById('name').value.trim(),
+      dept:    document.getElementById('dept').value,
+      phone:   document.getElementById('phone').value.trim(),
+      shuttle: document.querySelector('input[name="shuttle"]:checked').value,
+      diet:    document.getElementById('diet').value,
+      note:    document.getElementById('note').value.trim(),
+    };
+
+    try {
+      const res = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        document.getElementById('signupForm').style.display = 'none';
+        document.getElementById('successBox').style.display = 'block';
+        updateCount(data.count);
+        showToast('报名成功！🎉');
+      } else {
+        showToast(data.message || '提交失败，请稍后重试');
+        btn.disabled = false;
+        btn.textContent = '✅ 提交报名';
+      }
+    } catch (err) {
+      showToast('网络错误，请检查连接后重试');
+      btn.disabled = false;
+      btn.textContent = '✅ 提交报名';
+    }
+  });
+
+  function resetForm() {
+    document.getElementById('signupForm').reset();
+    document.getElementById('signupForm').style.display = 'block';
+    document.getElementById('successBox').style.display = 'none';
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('submitBtn').textContent = '✅ 提交报名';
+    // 清除所有错误状态
+    ['name','dept','phone'].forEach(id => markField(id, true));
+    ['nameErr','deptErr','phoneErr','shuttleErr'].forEach(id => clearErr(id));
+    document.getElementById('formCard').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ===== Toast =====
+  function showToast(msg, duration = 3000) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration);
+  }
+</script>
+</body>
+</html>
